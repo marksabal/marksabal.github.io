@@ -1,17 +1,76 @@
-<!-- <script>
-  window.TrustWalletClient.postMessage(JSON.stringify({
-  "payload": {
-    "currency": {
-      "metadata": {
-        "contractAddress": "0x581d255a15B3F2d71cE1561BdBe6cE51594B5160",
-        "slip44": "9006"
-      }
-    },
-    "amount": "1000",
-    "address": "0x581d255a15B3F2d71cE1561BdBe6cE51594B5160"
-  }
-}));
-</script> -->
-<script>
-  alert(window.TrustWalletClient)
-</script>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Connect Crypto Wallet with ethers.js</title>
+    <script src="https://cdn.jsdelivr.net/npm/ethers@5/dist/ethers.min.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+        button {
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+        pre {
+            background-color: #f4f4f4;
+            padding: 10px;
+            border-radius: 5px;
+            white-space: pre-wrap;
+        }
+    </style>
+</head>
+<body>
+    <h1>Connect Your Crypto Wallet</h1>
+    <p>Click the button below to connect your Ethereum wallet (e.g., MetaMask).</p>
+
+    <button id="connectButton">Connect Wallet</button>
+    <div id="output"></div>
+
+    <script>
+        // Check if the browser supports Ethereum providers (e.g., MetaMask)
+        const ethereum = window.ethereum;
+
+        // DOM elements
+        const connectButton = document.getElementById('connectButton');
+        const outputDiv = document.getElementById('output');
+
+        // Function to handle wallet connection
+        async function connectWallet() {
+            try {
+                if (!ethereum) {
+                    throw new Error("No Ethereum provider detected. Please install MetaMask or another Ethereum wallet.");
+                }
+
+                // Request account access
+                const accounts = await ethereum.request({ method: 'eth_requestAccounts' });
+
+                // Display connected account
+                const account = accounts[0];
+                outputDiv.innerHTML = `<pre>Connected Account: ${account}</pre>`;
+
+                // Initialize ethers.js provider
+                const provider = new ethers.providers.Web3Provider(ethereum);
+
+                // Get network information
+                const network = await provider.getNetwork();
+                outputDiv.innerHTML += `<pre>Connected Network: ${network.name} (Chain ID: ${network.chainId})</pre>`;
+
+                // Get wallet balance
+                const balance = await provider.getBalance(account);
+                const balanceInEther = ethers.utils.formatEther(balance);
+                outputDiv.innerHTML += `<pre>Account Balance: ${balanceInEther} ETH</pre>`;
+            } catch (error) {
+                console.error(error);
+                outputDiv.innerHTML = `<pre>Error: ${error.message}</pre>`;
+            }
+        }
+
+        // Attach event listener to the button
+        connectButton.addEventListener('click', connectWallet);
+    </script>
+</body>
+</html>
