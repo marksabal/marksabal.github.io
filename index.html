@@ -4,8 +4,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Connect Crypto Wallet (MetaMask + Phantom + Trust Wallet)</title>
+    <!-- Include ethers.js -->
     <script src="https://cdn.jsdelivr.net/npm/ethers@5/dist/ethers.min.js"></script>
-    <script src="https://unpkg.com/@walletconnect/modal@2.0.0/dist/umd/index.min.js"></script>
+    <!-- Include WalletConnect Modal v2.x -->
+    <script src="https://unpkg.com/@walletconnect/modal@2.6.0/dist/umd/index.min.js"></script>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -101,6 +103,11 @@
         // Function to connect Trust Wallet (via WalletConnect v2)
         async function connectTrustWallet() {
             try {
+                // Ensure WalletConnectModal is defined
+                if (typeof WalletConnectModal === "undefined") {
+                    throw new Error("WalletConnectModal is not defined. Ensure the script is properly loaded.");
+                }
+
                 // Initialize WalletConnect Modal
                 const wcModal = new WalletConnectModal({
                     projectId: "fec36b4fba2106b82ed43df5aa99e9a7", // Replace with your WalletConnect Project ID
