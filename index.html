@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Connect Crypto Wallet (MetaMask + Phantom + Trust Wallet)</title>
     <script src="https://cdn.jsdelivr.net/npm/ethers@5/dist/ethers.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@walletconnect/client@1.0.0/dist/umd/index.min.js"></script>
+    <script src="https://unpkg.com/@walletconnect/modal@2.0.0/dist/umd/index.min.js"></script>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -98,53 +98,39 @@
             }
         }
 
-        // Function to connect Trust Wallet (via WalletConnect)
+        // Function to connect Trust Wallet (via WalletConnect v2)
         async function connectTrustWallet() {
             try {
-                // Create a WalletConnect connector
-                const walletConnector = new WalletConnect({
-                    bridge: "https://bridge.walletconnect.org", // Required
-                    qrcodeModal: {
-                        open: (uri, cb) => {
-                            // Display the QR code modal for Trust Wallet
-                            outputDiv.innerHTML = `
-                                <p>Scan this QR code with Trust Wallet:</p>
-                                <img src="https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=${encodeURIComponent(uri)}" alt="QR Code">
-                            `;
-                            cb(); // Close the modal after scanning
-                        },
-                        close: () => {
-                            outputDiv.innerHTML = "<p>Connection closed.</p>";
-                        },
-                    },
+                // Initialize WalletConnect Modal
+                const wcModal = new WalletConnectModal({
+                    projectId: "fec36b4fba2106b82ed43df5aa99e9a7", // Replace with your WalletConnect Project ID
+                    chains: [1], // Ethereum Mainnet (Chain ID 1)
+                    optionalChains: [5], // Optional: Goerli Testnet (Chain ID 5)
                 });
 
-                // Check if already connected
-                if (!walletConnector.connected) {
-                    // Create a new session
-                    await walletConnector.createSession();
+                // Open WalletConnect modal and wait for connection
+                const { uri, approval } = await wcModal.connect();
+
+                // Display QR code if needed
+                if (uri) {
+                    outputDiv.innerHTML = `
+                        <p>Scan this QR code with Trust Wallet:</p>
+                        <img src="https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=${encodeURIComponent(uri)}" alt="QR Code">
+                    `;
                 }
 
-                // Subscribe to connection events
-                walletConnector.on("connect", (error, payload) => {
-                    if (error) {
-                        throw error;
-                    }
+                // Wait for user approval
+                const session = await approval;
 
-                    // Get the connected account and chain ID
-                    const { accounts, chainId } = payload.params[0];
-                    outputDiv.innerHTML = `
-                        <pre>Connected Account (Trust Wallet): ${accounts[0]}</pre>
-                        <pre>Connected Chain ID: ${chainId}</pre>
-                    `;
-                });
+                // Extract connected accounts and chain ID
+                const accounts = session.namespaces.eip155.accounts.map((acc) => acc.split(":")[2]);
+                const chainId = parseInt(session.namespaces.eip155.chains[0].split(":")[1]);
 
-                walletConnector.on("disconnect", (error) => {
-                    if (error) {
-                        throw error;
-                    }
-                    outputDiv.innerHTML = "<pre>Disconnected from Trust Wallet.</pre>";
-                });
+                // Display results
+                outputDiv.innerHTML = `
+                    <pre>Connected Account (Trust Wallet): ${accounts[0]}</pre>
+                    <pre>Connected Chain ID: ${chainId}</pre>
+                `;
             } catch (error) {
                 console.error(error);
                 outputDiv.innerHTML = `<pre>Error: ${error.message}</pre>`;
