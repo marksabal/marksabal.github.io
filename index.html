@@ -3,8 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Connect Crypto Wallet with ethers.js</title>
+    <title>Connect Crypto Wallet (MetaMask + Phantom + Trust Wallet)</title>
     <script src="https://cdn.jsdelivr.net/npm/ethers@5/dist/ethers.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@walletconnect/client@1.0.0/dist/umd/index.min.js"></script>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -14,6 +15,7 @@
             padding: 10px 20px;
             font-size: 16px;
             cursor: pointer;
+            margin: 5px;
         }
         pre {
             background-color: #f4f4f4;
@@ -25,52 +27,134 @@
 </head>
 <body>
     <h1>Connect Your Crypto Wallet</h1>
-    <p>Click the button below to connect your Ethereum wallet (e.g., MetaMask).</p>
+    <p>Click the appropriate button below to connect your wallet:</p>
 
-    <button id="connectButton">Connect Wallet</button>
+    <!-- Buttons for connecting wallets -->
+    <button id="connectMetaMask">Connect MetaMask (Ethereum)</button>
+    <button id="connectPhantom">Connect Phantom (Solana)</button>
+    <button id="connectTrustWallet">Connect Trust Wallet (via WalletConnect)</button>
     <div id="output"></div>
 
     <script>
-        // Check if the browser supports Ethereum providers (e.g., MetaMask)
-        const ethereum = window.ethereum;
-
         // DOM elements
-        const connectButton = document.getElementById('connectButton');
+        const connectMetaMaskButton = document.getElementById('connectMetaMask');
+        const connectPhantomButton = document.getElementById('connectPhantom');
+        const connectTrustWalletButton = document.getElementById('connectTrustWallet');
         const outputDiv = document.getElementById('output');
 
-        // Function to handle wallet connection
-        async function connectWallet() {
+        // Function to connect MetaMask (Ethereum)
+        async function connectMetaMask() {
             try {
-                if (!ethereum) {
+                if (!window.ethereum) {
                     throw new Error("No Ethereum provider detected. Please install MetaMask or another Ethereum wallet.");
                 }
 
                 // Request account access
-                const accounts = await ethereum.request({ method: 'eth_requestAccounts' });
-
-                // Display connected account
+                const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
                 const account = accounts[0];
-                outputDiv.innerHTML = `<pre>Connected Account: ${account}</pre>`;
 
                 // Initialize ethers.js provider
-                const provider = new ethers.providers.Web3Provider(ethereum);
+                const provider = new ethers.providers.Web3Provider(window.ethereum);
 
                 // Get network information
                 const network = await provider.getNetwork();
-                outputDiv.innerHTML += `<pre>Connected Network: ${network.name} (Chain ID: ${network.chainId})</pre>`;
-
-                // Get wallet balance
                 const balance = await provider.getBalance(account);
                 const balanceInEther = ethers.utils.formatEther(balance);
-                outputDiv.innerHTML += `<pre>Account Balance: ${balanceInEther} ETH</pre>`;
+
+                // Display results
+                outputDiv.innerHTML = `
+                    <pre>Connected Account (MetaMask): ${account}</pre>
+                    <pre>Connected Network: ${network.name} (Chain ID: ${network.chainId})</pre>
+                    <pre>Account Balance: ${balanceInEther} ETH</pre>
+                `;
             } catch (error) {
                 console.error(error);
                 outputDiv.innerHTML = `<pre>Error: ${error.message}</pre>`;
             }
         }
 
-        // Attach event listener to the button
-        connectButton.addEventListener('click', connectWallet);
+        // Function to connect Phantom (Solana)
+        async function connectPhantom() {
+            try {
+                if (!window.solana || !window.solana.isPhantom) {
+                    throw new Error("Phantom Wallet not detected. Please install Phantom Wallet.");
+                }
+
+                // Request account access
+                const response = await window.solana.connect();
+                const publicKey = response.publicKey.toString();
+
+                // Check if the wallet is connected
+                const isConnected = window.solana.isConnected;
+
+                // Display results
+                outputDiv.innerHTML = `
+                    <pre>Connected Account (Phantom): ${publicKey}</pre>
+                    <pre>Wallet Connected: ${isConnected}</pre>
+                `;
+            } catch (error) {
+                console.error(error);
+                outputDiv.innerHTML = `<pre>Error: ${error.message}</pre>`;
+            }
+        }
+
+        // Function to connect Trust Wallet (via WalletConnect)
+        async function connectTrustWallet() {
+            try {
+                // Create a WalletConnect connector
+                const walletConnector = new WalletConnect({
+                    bridge: "https://bridge.walletconnect.org", // Required
+                    qrcodeModal: {
+                        open: (uri, cb) => {
+                            // Display the QR code modal for Trust Wallet
+                            outputDiv.innerHTML = `
+                                <p>Scan this QR code with Trust Wallet:</p>
+                                <img src="https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=${encodeURIComponent(uri)}" alt="QR Code">
+                            `;
+                            cb(); // Close the modal after scanning
+                        },
+                        close: () => {
+                            outputDiv.innerHTML = "<p>Connection closed.</p>";
+                        },
+                    },
+                });
+
+                // Check if already connected
+                if (!walletConnector.connected) {
+                    // Create a new session
+                    await walletConnector.createSession();
+                }
+
+                // Subscribe to connection events
+                walletConnector.on("connect", (error, payload) => {
+                    if (error) {
+                        throw error;
+                    }
+
+                    // Get the connected account and chain ID
+                    const { accounts, chainId } = payload.params[0];
+                    outputDiv.innerHTML = `
+                        <pre>Connected Account (Trust Wallet): ${accounts[0]}</pre>
+                        <pre>Connected Chain ID: ${chainId}</pre>
+                    `;
+                });
+
+                walletConnector.on("disconnect", (error) => {
+                    if (error) {
+                        throw error;
+                    }
+                    outputDiv.innerHTML = "<pre>Disconnected from Trust Wallet.</pre>";
+                });
+            } catch (error) {
+                console.error(error);
+                outputDiv.innerHTML = `<pre>Error: ${error.message}</pre>`;
+            }
+        }
+
+        // Attach event listeners to buttons
+        connectMetaMaskButton.addEventListener('click', connectMetaMask);
+        connectPhantomButton.addEventListener('click', connectPhantom);
+        connectTrustWalletButton.addEventListener('click', connectTrustWallet);
     </script>
 </body>
 </html>
